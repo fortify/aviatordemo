@@ -12,8 +12,10 @@ jobs:
         uses: fortify/github-action/setup@v2
         with:
           fcli: latest
-      - name: FCLI definitions update
+      - name: fcli definitions update
         run: fcli tool definitions update
+      - name: fcli tool list
+        run: fcli tool fcli list
       - name: fcli install
         run: fcli tool fcli install
       - name: fcli version dump
