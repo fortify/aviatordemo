@@ -11,6 +11,6 @@ jobs:
       - name: Setup Fortify tools
         uses: fortify/github-action/setup@v2
         with:
-          fcli: latest
+          fcli: v3.10.0
       - name: Run fcli from PATH
         run: fcli -V
