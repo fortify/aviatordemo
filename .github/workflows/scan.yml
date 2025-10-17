@@ -1,0 +1,33 @@
+name: Scan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run ScanCentral SAST
+        uses: fortify/github-action@v2
+        with:
+          sast-scan: true
+          debricked-sca-scan: false
+        env:
+          SSC_URL: ${{vars.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SC_SAST_TOKEN: ${{secrets.SC_SAST_CLIENT_AUTH_TOKEN}}
+          SSC_APPVERSION: 'ghaviatordemo:main'
+          DO_SETUP: 'true'
+          DO_WAIT: 'true'
+          DO_JOB_SUMMARY: 'true'
