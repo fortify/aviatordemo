@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.fortify</groupId>
-    <artifactId>aviator_fod_demo</artifactId>
+    <artifactId>aviatordemo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>aviator_fod_demo</name>
-    <description>aviator_fod_demo</description>
+    <name>aviatordemo</name>
+    <description>aviatordemo</description>
     <properties>
         <java.version>17</java.version>
     </properties>
