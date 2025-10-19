@@ -27,4 +27,4 @@ jobs:
       - name: SSC session login
         run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
       - name: Run SAST Aviator audit
-        run: fcli aviator ssc audit --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}" --app "${{vars.APPLICATION_NAME}}"
+        run: fcli aviator ssc audit --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}" --app "${{vars.APPLICATION_NAME}}" --progress=none
