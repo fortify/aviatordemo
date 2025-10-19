@@ -1,0 +1,29 @@
+name: Audit
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:    
+      - name: Setup Fortify tools
+        uses: fortify/github-action/setup@v2
+        with:
+          fcli: latest
+
+      - name: SSC session login
+        run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
+
+      - name: Get Latest Aviator Artifact ID
+        id: get-artifact
+        run: |
+          ARTIFACT_ID=$(fcli ssc artifact ls --av "ghaviatordemo:main" --output json | \
+            jq -r '[.[] | select(.originalFileName | startswith("aviator_"))] | \
+                   sort_by(.uploadDate) | \
+                   last | \
+                   .id')
+          
+          echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
+          echo "Latest aviator artifact ID: $ARTIFACT_ID"
