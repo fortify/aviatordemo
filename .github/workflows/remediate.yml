@@ -17,15 +17,14 @@ jobs:
         run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
 
       - name: Get Latest Aviator Artifact ID
-              id: get-artifact
-              run: |
-                ARTIFACT_ID=$(fcli ssc artifact ls --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}" --output json | 
-                  jq -r '
-                    [.[] | select(.originalFileName | startswith("aviator_"))] | 
-                    sort_by(.uploadDate) | 
-                    last | 
-                    .id
-                  ')
+        run: |
+          ARTIFACT_ID=$(fcli ssc artifact ls --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}" --output json | 
+            jq -r '
+              [.[] | select(.originalFileName | startswith("aviator_"))] | 
+              sort_by(.uploadDate) | 
+              last | 
+              .id
+            ')
           
           echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
           echo "Latest aviator artifact ID: $ARTIFACT_ID"
