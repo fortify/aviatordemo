@@ -53,18 +53,18 @@ public class HomeController {
                 request.setAttribute(ATTRIB_MESSAGE, WRONG_CREDS);
             }
         }
-        String validatedUrl = validateRedirect(redirectUrl);
-        if(validatedUrl == null) return new ModelAndView("error");
-        return new ModelAndView("redirect:" + validatedUrl);
+        // String validatedUrl = validateRedirect(redirectUrl);
+        // if(validatedUrl == null) return new ModelAndView("error");
+        return new ModelAndView("redirect:/home");
     }
 
-    private String validateRedirect(String url) {
-        if("http://redirectoption1.com".equals(url)) {
-            return url;
-        } else if("http://redirectoption2.com".equals(url)) {
-            return url;
-        } else {
-            return null;
-        }
-    }
+    // private String validateRedirect(String url) {
+    //     if("http://redirectoption1.com".equals(url)) {
+    //         return url;
+    //     } else if("http://redirectoption2.com".equals(url)) {
+    //         return url;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 }
