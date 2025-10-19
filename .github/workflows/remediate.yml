@@ -19,7 +19,7 @@ jobs:
       - name: SSC session login
         run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
 
-      - name: Get Artifact ID
+      - name: Apply remediations
         run: |
           ARTIFACT_ID=$(fcli ssc artifact ls --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}" --output json | 
             jq -r '
@@ -28,12 +28,8 @@ jobs:
               last | 
               .id
             ')
-          
-          echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
           echo "Latest aviator artifact ID: $ARTIFACT_ID"
-
-      - name: Apply remediations
-        run: fcli aviator ssc apply-remediations --artifact-id  ${{ steps.get-artifact-id.outputs.artifact_id }}
+          fcli aviator ssc apply-remediations --artifact-id $ARTIFACT_ID
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
