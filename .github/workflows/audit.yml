@@ -12,6 +12,8 @@ jobs:
         uses: fortify/github-action/setup@v2
         with:
           fcli: latest
-      - name: fcli version dump
-        run: fcli -V
+      - name: aviator admin login
+        run: admin-config create --url ${{vars.AVIATOR_URL}} --tenant ${{vars.AVIATOR_TENANT}} --private-key ${{secrets.AVIATOR_KEY}}
+      - name: aviator app list
+        run: fcli aviator app list
 
