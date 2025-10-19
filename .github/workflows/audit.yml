@@ -13,7 +13,7 @@ jobs:
         with:
           fcli: latest
       - name: aviator admin login
-        run: fcli aviator admin-config create --url ${{vars.AVIATOR_URL}} --tenant ${{vars.AVIATOR_TENANT}} --private-key ${{secrets.AVIATOR_KEY}}
+        run: fcli aviator admin-config create --url ${{vars.AVIATOR_URL}} --tenant ${{vars.AVIATOR_TENANT}} --private-key "${{secrets.AVIATOR_KEY}}"
       - name: aviator app list
         run: fcli aviator app list
 
