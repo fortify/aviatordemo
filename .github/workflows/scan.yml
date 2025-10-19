@@ -27,7 +27,7 @@ jobs:
           SSC_URL: ${{vars.SSC_URL}}
           SSC_TOKEN: ${{secrets.SSC_TOKEN}}
           SC_SAST_TOKEN: ${{secrets.SC_SAST_CLIENT_AUTH_TOKEN}}
-          SSC_APPVERSION: 'ghaviatordemo:${{github.ref_name}}'
+          SSC_APPVERSION: '${{vars.APPLICATION_NAME}}:${{github.ref_name}}'
           DO_SETUP: true
           DO_WAIT: true
           DO_JOB_SUMMARY: true
