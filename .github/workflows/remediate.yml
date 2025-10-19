@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:    
       - name: Setup Fortify tools
@@ -16,7 +19,7 @@ jobs:
       - name: SSC session login
         run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
 
-      - name: Get Latest Aviator Artifact ID
+      - name: Get Artifact ID
         run: |
           ARTIFACT_ID=$(fcli ssc artifact ls --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}" --output json | 
             jq -r '
@@ -28,3 +31,18 @@ jobs:
           
           echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
           echo "Latest aviator artifact ID: $ARTIFACT_ID"
+
+      - name: Apply remediations
+        run: fcli aviator ssc apply-remediations --artifact-id  ${{ steps.get-artifact-id.outputs.artifact_id }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: auto-remediate security issues'
+          branch: auto-fix/security-${{ github.run_id }}
+          delete-branch: true
+          title: '🔒 Auto-remediate security issues'
+          body: |
+            Automated security remediations.
+            Please review carefully before merging.          
