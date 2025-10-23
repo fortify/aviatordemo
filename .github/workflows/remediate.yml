@@ -35,13 +35,14 @@ jobs:
           fcli aviator ssc apply-remediations --artifact-id $ARTIFACT_ID
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore: auto-remediate security issues'
-          branch: auto-fix/security-${{ github.run_id }}
+          commit-message: 'auto-remediation by OpenText SAST Aviator'
+          branch: aviator/remediate-${{ github.run_id }}
           delete-branch: true
-          title: '🔒 Auto-remediate security issues'
+          title: 'Remediation of security issues detected by OpenText SAST'
           body: |
-            Automated security remediations.
-            Please review carefully before merging.          
+            Remediation of security issues detected by OpenText SAST.
+            This PR was automatically created by OpenText SAST Aviator.
+            Please review carefully before merging.
