@@ -31,3 +31,4 @@ jobs:
           DO_SETUP: true
           DO_WAIT: true
           DO_JOB_SUMMARY: true
+          SETUP_EXTRA_OPTS: '--issue-template "Prioritized High Risk Issue Template - Fortify Aviator"'
