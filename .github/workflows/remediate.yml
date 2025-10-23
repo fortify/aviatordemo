@@ -11,6 +11,9 @@ jobs:
       pull-requests: write
 
     steps:    
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Fortify tools
         uses: fortify/github-action/setup@v2
         with:
