@@ -1,4 +1,4 @@
-name: Remediate
+name: Scan-Audit-Remediate
 
 on:
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
 
       - name: SSC session login
         run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
-        
+
       - name: aviator session login
         run: fcli aviator session login --url ${{vars.AVIATOR_URL}} --token "${{secrets.AVIATOR_TOKEN}}"
 
