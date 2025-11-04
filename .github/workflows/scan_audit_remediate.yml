@@ -1,0 +1,78 @@
+name: Remediate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:    
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Setup Fortify tools
+        uses: fortify/github-action/setup@v2
+        with:
+          fcli: latest
+
+      - name: Run ScanCentral SAST
+        uses: fortify/github-action@v2
+        with:
+          sast-scan: true
+          debricked-sca-scan: false
+        env:
+          SSC_URL: ${{vars.SSC_URL}}
+          SSC_TOKEN: ${{secrets.SSC_TOKEN}}
+          SC_SAST_TOKEN: ${{secrets.SC_SAST_CLIENT_AUTH_TOKEN}}
+# Including the run_id in the app version name. This doesn't make a lot of sense in production, but enables
+# us to run this demo many times.          
+          SSC_APPVERSION: '${{vars.APPLICATION_NAME}}:${{github.ref_name}}-remediate-${{github.run_id}}'
+          DO_SETUP: true
+          DO_WAIT: true
+          DO_JOB_SUMMARY: true
+          SETUP_EXTRA_OPTS: '--issue-template "Prioritized High Risk Issue Template - Fortify Aviator"'
+
+      - name: SSC session login
+        run: fcli ssc session login --url ${{vars.SSC_URL}} --token "${{secrets.SSC_TOKEN}}"
+        
+      - name: aviator session login
+        run: fcli aviator session login --url ${{vars.AVIATOR_URL}} --token "${{secrets.AVIATOR_TOKEN}}"
+
+      - name: Run SAST Aviator audit
+        run: fcli aviator ssc audit --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}-remediate-${{github.run_id}}" --app "${{vars.APPLICATION_NAME}}" --progress=none
+
+      - name: Apply remediations
+        run: |
+          ARTIFACT_ID=$(fcli ssc artifact ls --av "${{vars.APPLICATION_NAME}}:${{github.ref_name}}-remediate-${{github.run_id}}" --output json | 
+            jq -r '
+              [.[] | select(.originalFileName | startswith("aviator_"))] | 
+              sort_by(.uploadDate) | 
+              last | 
+              .id
+            ')
+          echo "Latest aviator artifact ID: $ARTIFACT_ID"
+          fcli aviator ssc apply-remediations --artifact-id $ARTIFACT_ID
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'auto-remediation by OpenText SAST Aviator'
+          branch: aviator/scan-audit-remediate-${{github.run_id}}
+          delete-branch: true
+          title: 'Remediation of security issues detected by OpenText SAST'
+          body: |
+            Remediation of security issues detected by OpenText SAST.
+            This PR was automatically created by OpenText SAST Aviator.
+            Please review carefully before merging.
