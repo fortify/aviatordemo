@@ -29,6 +29,7 @@ jobs:
           SC_SAST_TOKEN: ${{secrets.SC_SAST_CLIENT_AUTH_TOKEN}}
           SSC_APPVERSION: '${{vars.APPLICATION_NAME}}:${{github.ref_name}}'
           DO_SETUP: true
+          SC_CLIENT_VERSION: 25.2          
           DO_WAIT: true
           DO_JOB_SUMMARY: true
           SETUP_EXTRA_OPTS: '--issue-template "Prioritized High Risk Issue Template - Fortify Aviator"'
