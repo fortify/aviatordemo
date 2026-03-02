@@ -35,17 +35,17 @@ public class HomeController {
         else if(password.isEmpty())
             request.setAttribute(ATTRIB_MESSAGE, PASSWORD);
         else {
-            System.out.println("username: " + username);
-            System.out.println("password: " + password);
+            // Credentials validation - sensitive data not logged
 
 
             /* Verify whether credentials are correct. */
             boolean credentialsCorrect = false;
             try(Connection connection = DriverManager.getConnection("localhost:1234", "dbuser", "secretpwd")) {
-                try (Statement statement = connection.createStatement()) {
-                    try (ResultSet rs = statement.executeQuery(
-                            "SELECT 1 FROM users WHERE username = '" + username + "' AND password = '" + password + "'")) {
-                        credentialsCorrect = rs.next();
+                try (PreparedStatement pstmt = connection.prepareStatement(
+                        "SELECT 1 FROM users WHERE username = ? AND password = ?")) {
+                    pstmt.setString(1, username);
+                    pstmt.setString(2, password);
+                    try (ResultSet rs = pstmt.executeQuery()) {
                     }
                 }
             }
