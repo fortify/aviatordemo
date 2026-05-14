@@ -62,7 +62,7 @@ jobs:
           fcli aviator ssc apply-remediations --artifact-id $ARTIFACT_ID
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: fortify/3rdparty-actions/actions/peter-evans/create-pull-request/v8@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'auto-remediation by OpenText SAST Aviator'
